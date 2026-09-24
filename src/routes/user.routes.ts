@@ -15,6 +15,12 @@ router.get("/users", (_req: Request, res: Response) => {
 
 router.get("/users/:id", (req: Request, res: Response) => {
   const id = Number(req.params.id);
+
+  if (!Number.isInteger(id) || id <= 0) {
+    res.status(400).json({ message: "Invalid user ID" });
+    return;
+  }
+
   const user = userController.getUserById(id);
 
   if (!user) {
@@ -28,6 +34,13 @@ router.get("/users/:id", (req: Request, res: Response) => {
 router.post("/users", (req: Request, res: Response) => {
   const { name, email } = req.body;
 
+  if (!name || !email) {
+    res.status(400).json({
+      message: "Name and email are required",
+    });
+    return;
+  }
+
   const user = userController.createUser(name, email);
 
   res.status(201).json(user);
@@ -35,6 +48,12 @@ router.post("/users", (req: Request, res: Response) => {
 
 router.delete("/users/:id", (req: Request, res: Response) => {
   const id = Number(req.params.id);
+
+  if (!Number.isInteger(id) || id <= 0) {
+    res.status(400).json({ message: "Invalid user ID" });
+    return;
+  }
+
   const deleted = userController.deleteUser(id);
 
   if (!deleted) {
